@@ -192,54 +192,40 @@ void holiday_mic_enable(int en, int shift)
 
 void holiday_imic_pamp_on_with_audience(int en)
 {
-	int ret, call_state = 0;
-	pr_aud_info("%s %d\n", __func__, en);
-
-	call_state = msm_get_call_state();
-	if (en) {
-		ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_ALWAYS_ON);
-		if (ret)
-			pr_aud_err("%s: Enabling int mic power failed\n", __func__);
-
-		/* select internal mic path */
-		if (call_state) {
-			gpio_set_value(PM8058_GPIO_PM_TO_SYS(HOLIDAY_AUD_MIC_SEL2), 0);
-			ret = pm8058_micbias_enable(OTHC_MICBIAS_1, OTHC_SIGNAL_ALWAYS_ON);
-			if (ret)
-				pr_aud_err("%s: Enabling back mic power failed\n", __func__);
-		} else {
-			if (!force_a1026_on)
-				gpio_set_value(PM8058_GPIO_PM_TO_SYS(HOLIDAY_AUD_MIC_SEL2), 1);
-		}
-	} else {
-		ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_OFF);
-		if (ret)
-			pr_aud_err("%s: Enabling int mic power failed\n", __func__);
-		if (call_state) {
-			ret = pm8058_micbias_enable(OTHC_MICBIAS_1, OTHC_SIGNAL_OFF);
-			if (ret)
-				pr_aud_err("%s: Enabling back mic power failed\n", __func__);
-		}
-	}
+        int ret;
+ 
+        pr_aud_info("%s %d\n", __func__, en);
+ 
+        holiday_snddev_bmic_pamp_on(en);
+        if (en) {
+                ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_ALWAYS_ON);
+                if (ret)
+                        pr_aud_err("%s: Enabling int mic power failed\n", __func__);
+ 
+        } else {
+                ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_OFF);
+                if (ret)
+                        pr_aud_err("%s: Enabling int mic power failed\n", __func__);
+        }
 }
-
+ 
 void holiday_imic_pamp_on_without_audience(int en)
 {
-	int ret;
-
-	pr_aud_info("%s %d\n", __func__, en);
-
-	holiday_snddev_bmic_pamp_on(en);
-	if (en) {
-		ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_ALWAYS_ON);
-		if (ret)
-			pr_aud_err("%s: Enabling int mic power failed\n", __func__);
-
-	} else {
-		ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_OFF);
-		if (ret)
-			pr_aud_err("%s: Enabling int mic power failed\n", __func__);
-	}
+        int ret;
+ 
+        pr_aud_info("%s %d\n", __func__, en);
+ 
+        holiday_snddev_bmic_pamp_on(en);
+        if (en) {
+                ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_ALWAYS_ON);
+                if (ret)
+                        pr_aud_err("%s: Enabling int mic power failed\n", __func__);
+ 
+        } else {
+                ret = pm8058_micbias_enable(OTHC_MICBIAS_0, OTHC_SIGNAL_OFF);
+                if (ret)
+                        pr_aud_err("%s: Enabling int mic power failed\n", __func__);
+        }
 }
 
 void holiday_snddev_imic_pamp_on(int en)
